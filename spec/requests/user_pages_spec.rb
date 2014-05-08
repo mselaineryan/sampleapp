@@ -12,6 +12,16 @@ describe "UserPages" do
 			before { visit new_user_path }
 			it { should have_content(user.name) }
 		end
+
+		describe "pagination" do
+			after(:all) { user.microposts.delete_all unless user.microposts.nil? }
+		
+  			it "should paginate the feed" do
+     			51.times { FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum") }
+     			visit root_path
+     			page.should have_selector("div.pagination") 
+  			end
+		end
 	end
 
 
@@ -31,6 +41,8 @@ describe "UserPages" do
 			it { should have_content(m2.content) }
 			it { should have_content(user.microposts.count) }
 		end
+
+		
 	end
 
 	describe "signup page" do
